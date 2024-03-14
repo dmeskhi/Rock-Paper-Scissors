@@ -3,7 +3,7 @@ const choices = ["rock", "paper", "scissors"];
 const winners = [];
 
 function game() {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 1; i <= 5; i++) {
     playRound(i);
     }
     whoIsWinner();
@@ -76,7 +76,7 @@ function whoIsWinner() {
     console.log("Results:");
     console.log("Player wins: ", playerWins);
     console.log("Computer wins: ", computerWins);
-    console.log("It's a tie: ", ties);
+    console.log("Tie: ", ties);
     //console.log(winners);
 }
 
