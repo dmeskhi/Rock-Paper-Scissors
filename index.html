@@ -3,28 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        .container{
-            margin: auto;
-            width: 50%;
-            border: 2px solid #333;
-            padding: 10px;
-            background-color: #ccc;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
     <title>Rock, Paper, Scissors</title>
 </head>
 <body>
+    <!-- Main container -->
     <div class="container">
+
         <div class="score">
             <h1 class="ties">Ties: 0</h1>
         </div>
         <div class="winners">
             <h1 class="winner"></h1>
+            <button class="reset" onclick="resetGame()">
+                Play Again 
+            </button>
         </div>
-
+        <!-- Player section goes here-->
+        <div class="playerSection">
+            <h3 class="playerChoice"></h3>
+            <h3 class="playerScore">Score: 0</h3>
+            <div class="playerBtns">
+                <button class="pBtn" id="rock">Rock</button>
+                <button class="pBtn" id="paper">Paper</button>
+                <button class="pBtn" id="scissors">Scissors</button>
+            </div>            
+        </div>
+        <!-- End of player section goes here-->
+        <!-- Computer section goes here-->
+        <div class="computerSection">
+            <h3 class="computerChoice"></h3>
+            <h3 class="computerScore">Score: 0</h3>
+            <div class="computerBtns">
+                <button class="pBtn">Rock</button>
+                <button class="pBtn">Paper</button>
+                <button class="pBtn">Scissors</button>
+            </div>            
+        </div>
+        <!-- End of computer section goes here-->
     </div>
-
+    <!-- End of main container -->
     <script src="script.js"></script>
 </body>
 </html>
