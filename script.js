@@ -1,68 +1,113 @@
-//Declare an array and get random choice from the computer
+//Declare an array 
+let winners = [];
 const choices = ["rock", "paper", "scissors"];
-const winners = [];
 
-function game() {
-    for (let i = 1; i <= 5; i++) {
-    playRound(i);
-    }
-    whoIsWinner();
+//Resets game 
+function resetGame() {
+    winners = [];
+    document.querySelector(".playerScore").textContent = "Score: 0";
+    document.querySelector(".computerScore").textContent = "Score: 0";
+    document.querySelector(".ties").textContent = "Ties: 0";
+    document.querySelector(".winner").textContent = "";
+    document.querySelector(".playerChoice").textContent = "";
+    document.querySelector(".computerChoice").textContent = "";
+    document.querySelector(".reset").style.display = "none";
 }
 
-function playRound(round) {
-    const playerSelection = playerChoice();
-    const computerSelection = computerChoice();
-    const winner = checkWinner(playerSelection, computerSelection);
+//Gets all the buttons from HTML and transfers appropriate value by id
+function startGame() {
+    let allBs = document.querySelectorAll("button");
+    allBs.forEach((button) => 
+    button.addEventListener("click", () => {
+        if(button.id) {
+            playRound(button.id);
+        }
+    }));
+}
+//Shows user's choice in Player section
+function playRound(playerChoice) {
+    let wins = checkWins();
+    if(wins >= 5) {
+        return;
+    }
+
+    const computerChoice = computerSelect();
+
+    const winner = checkWinner(playerChoice, computerChoice);
     winners.push(winner);
-    logRound(playerSelection, computerSelection, winner, round);
-}
-
-function playerChoice() {
-    //Player input 
-    let input = prompt("Enter rock, paper, or scissors");
-    //When input is empty pop-up menu stays until it gets input
-    while(input == null) {
-        input = prompt("Enter rock, paper, or scissors");
-    } 
-    //Make input text all lowercase
-    input = input.toLowerCase();
-    //Check if user input coincides with computer choices 
-    let check = validateInput(input);
-
-    while (check == false) {
-        input = prompt(
-            "Please, correct your spelling and enter rock, paper, scissors. Words are not case sensitive"
-            );
-            while(input == null) {
-                input = prompt("Enter rock, paper, or scissors");
-            } 
-            input = input.toLowerCase();
-            check = validateInput(input);
+    totalWins();
+    displayRound(playerChoice, computerChoice, winner);
+    wins = checkWins();
+    if (wins == 5) {
+    endGame();
     }
-    return input;
 }
 
-function computerChoice() {
+//Either side must win 5 times
+function endGame() {
+    let playerWins = winners.filter((item) => item == "Player").length;
+
+    if(playerWins == 5) {
+        document.querySelector(".winner").textContent = "You won 5 times";
+    } else {
+        document.querySelector(".winner").textContent = "Computer won 5 times";
+    }
+    //Shows 'Play Again' button
+    document.querySelector(".reset").style.display = "flex";
+}
+
+//Shows either side's choice and displays the winner
+function displayRound(playerChoice, computerChoice, winner) {
+    document.querySelector(".playerChoice").textContent = `You chose: ${
+        playerChoice.charAt(0).toUpperCase() + playerChoice.slice(1)
+    }`;
+    document.querySelector(".computerChoice").textContent = `Computer chose: ${
+        computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)
+    }`;
+    displayRoundWinner(winner);
+
+}
+
+function displayRoundWinner(winner) {
+    if (winner == "Player") {
+        document.querySelector(".winner").textContent = "You won the round!";
+    } else if (winner == "Computer") {
+        document.querySelector(".winner").textContent = "Computer won the round!";
+    } else {
+        document.querySelector(".winner").textContent = "The round was a tie!";
+    }
+}
+//Counts and displays either side's score after each game and ties also
+function totalWins() {
+    const playerWinCount = winners.filter((item) => item == "Player").length;
+    const computerWinCount = winners.filter((item) => item == "Computer").length;
+    const ties = winners.filter((item) => item == "Tie").length;
+    document.querySelector(".playerScore").textContent = `Score: ${playerWinCount}`;
+    document.querySelector(".computerScore").textContent = `Score: ${computerWinCount}`;
+    document.querySelector(".ties").textContent = `Ties: ${ties}`;
+}
+//Computer randomly picks choices
+function computerSelect() {
     return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function validateInput(choice) {
-    if(choices.includes(choice)) {
-        return true;
-    } else {
-        return false;
-    }
+
+//Checking for either side's win
+function checkWins() {
+    const playerWinCount = winners.filter((item) => item == "Player").length;
+    const computerWinCount = winners.filter((item) => item == "Computer").length;
+    return Math.max(playerWinCount, computerWinCount);
 }
 
-function checkWinner(choiceUser, choiceComputer) {
-    if(choiceUser === choiceComputer) {
-        return "Tie";
-    }else if(
-        (choiceUser === "rock" && choiceComputer === "scissors") ||
-        (choiceUser === "paper" && choiceComputer === "rock") ||
-        (choiceUser === "scissors" && choiceComputer === "paper")
+function checkWinner(choice1, choice2) {
+    if(
+        (choice1 == "rock" && choice2 == "scissors") ||
+        (choice1 == "scissors" && choice2 == "paper") ||
+        (choice1 == "paper" && choice2 == "rock")
     ){
         return "Player";
+    }else if(choice1 == choice2){
+        return "Tie";
     }else{
         return "Computer";
     }
@@ -70,22 +115,10 @@ function checkWinner(choiceUser, choiceComputer) {
 
 function whoIsWinner() {
     //Make a filter array for each case
-    let playerWins = winners.filter((item) => item == "Player").length;
-    let computerWins = winners.filter((item) => item == "Computer").length;
-    let ties = winners.filter((item) => item == "Tie").length;
-    console.log("Results:");
-    console.log("Player wins: ", playerWins);
-    console.log("Computer wins: ", computerWins);
-    console.log("Tie: ", ties);
-    //console.log(winners);
+    const playerWinCount = winners.filter((item) => item == "Player").length;
+    const computerWinCount = winners.filter((item) => item == "Computer").length;
+    const ties = winners.filter((item) => item == "Tie").length;
+    
 }
-
-function logRound(playerChoice, computerChoice, winner, round) {
-    console.log("Round: ", round);
-    console.log("Player chose: ", playerChoice);
-    console.log("Computer chose: ", computerChoice);
-    console.log(winner, "won the round");
-    console.log("---------------------------------");
-}
-game();
+startGame();
 
